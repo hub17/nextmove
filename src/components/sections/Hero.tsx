@@ -52,11 +52,11 @@ export function Hero() {
           <div className="absolute -inset-2 rounded-[2rem] bg-gradient-to-tr from-blue-200/50 to-emerald-200/50 blur-xl" />
           <div className="relative overflow-hidden rounded-[1.75rem] border border-white/70 bg-white p-3 shadow-xl">
             <Image
-              src="/images/van-hero.svg"
-              alt="Illustrated cargo van representing secure freight delivery"
+              src="/images/main.jpg"
+              alt="Freight delivery partners shaking hands in front of a truck"
               width={1400}
               height={960}
-              className="h-auto w-full rounded-2xl"
+              className="aspect-[3/2] w-full rounded-2xl object-cover"
               priority
             />
           </div>
