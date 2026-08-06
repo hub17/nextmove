@@ -9,9 +9,6 @@ export function Hero() {
 
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:px-8 lg:py-24">
         <div className="animated-enter">
-          <p className="inline-flex items-center rounded-full border border-blue-200 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-blue-700">
-            WASSI Global Services
-          </p>
           <h1 className="mt-5 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
             Reliable Freight Transportation Built Around Your Schedule
           </h1>
@@ -40,10 +37,6 @@ export function Hero() {
             <li className="rounded-xl border border-blue-100 bg-white/85 px-4 py-3 text-slate-700">
               <span className="block text-xs uppercase tracking-wide text-blue-700">Operating Window</span>
               Mon-Fri, 8 AM - 8 PM
-            </li>
-            <li className="rounded-xl border border-emerald-100 bg-white/85 px-4 py-3 text-slate-700">
-              <span className="block text-xs uppercase tracking-wide text-emerald-700">Service Focus</span>
-              Time-sensitive cargo van loads
             </li>
           </ul>
         </div>
