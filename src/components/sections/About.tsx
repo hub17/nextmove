@@ -22,11 +22,11 @@ export function About() {
 
         <div className="overflow-hidden rounded-2xl border border-white/70 bg-white p-2 shadow-lg">
           <Image
-            src="/images/route-grid.svg"
-            alt="Stylized route map graphic representing regional delivery planning"
+            src="/images/van.jpg"
+            alt="Freight team loading boxes into a cargo van"
             width={1400}
             height={960}
-            className="h-auto w-full rounded-xl"
+            className="aspect-[4/5] w-full rounded-xl object-cover"
           />
         </div>
       </div>
