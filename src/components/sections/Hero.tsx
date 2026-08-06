@@ -1,4 +1,7 @@
 import Image from "next/image";
+import { ArrowUpRight, Clock3 } from "lucide-react";
+
+import { siteContact } from "@/content/site";
 
 export function Hero() {
   return (
@@ -9,36 +12,42 @@ export function Hero() {
 
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:px-8 lg:py-24">
         <div className="animated-enter">
-          <h1 className="mt-5 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[var(--brand)]">
+            Local and regional Sprinter freight
+          </p>
+          <h1 className="mt-4 max-w-2xl text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
             Reliable Freight Transportation Built Around Your Schedule
           </h1>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed text-slate-700">
+          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slate-700">
             Request reliable local and regional cargo van freight service for
             shipments that fit safely inside a 2024 Mercedes-Benz Sprinter
             high-roof extended van, with responsive scheduling, secure
             handling, and clear communication from pickup to delivery.
           </p>
-          <div className="mt-8 flex flex-wrap gap-4">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
               href="#quote"
-              className="ring-brand inline-flex items-center justify-center rounded-xl bg-[var(--brand)] px-6 py-3 text-sm font-semibold text-white shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-[var(--brand-strong)]"
+              className="ring-brand inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--brand)] px-6 py-3 text-sm font-semibold text-white shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-[var(--brand-strong)]"
             >
               Request a Quote
+              <ArrowUpRight aria-hidden="true" className="size-4" />
             </a>
             <a
               href="#appointment"
-              className="ring-brand inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white/80 px-6 py-3 text-sm font-semibold text-slate-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white"
+              className="ring-brand inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white/80 px-6 py-3 text-sm font-semibold text-slate-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white"
             >
               Book Appointment
+              <ArrowUpRight aria-hidden="true" className="size-4" />
             </a>
           </div>
 
-          <ul className="mt-8 grid grid-cols-2 gap-3 text-sm sm:max-w-md">
-            <li className="rounded-xl border border-blue-100 bg-white/85 px-4 py-3 text-slate-700">
-              <span className="block text-xs uppercase tracking-wide text-blue-700">Operating Window</span>
-              Mon-Fri, 8 AM - 8 PM
-            </li>
-          </ul>
+          <div className="mt-8 flex max-w-2xl items-center gap-3 border-t border-slate-200 pt-5 text-sm text-slate-700">
+            <Clock3 aria-hidden="true" className="size-5 shrink-0 text-[var(--brand)]" />
+            <p>
+              <span className="font-semibold text-slate-900">Operating hours:</span>{" "}
+              {siteContact.hours}
+            </p>
+          </div>
         </div>
 
         <div className="animated-enter-delay relative">
