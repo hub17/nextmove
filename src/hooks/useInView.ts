@@ -18,20 +18,16 @@ export function useInView<T extends HTMLElement = HTMLDivElement>(
   } = options;
 
   const ref = useRef<T | null>(null);
-  const [inView, setInView] = useState(false);
+  const prefersReducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const [inView, setInView] = useState(prefersReducedMotion);
 
   useEffect(() => {
+    if (prefersReducedMotion) return;
+
     const node = ref.current;
     if (!node) return;
-
-    // Respect users who prefer reduced motion: show content immediately.
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      setInView(true);
-      return;
-    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -47,7 +43,7 @@ export function useInView<T extends HTMLElement = HTMLDivElement>(
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, [threshold, rootMargin, triggerOnce]);
+  }, [threshold, rootMargin, triggerOnce, prefersReducedMotion]);
 
   return { ref, inView };
 }
