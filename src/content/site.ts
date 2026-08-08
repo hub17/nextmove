@@ -25,7 +25,6 @@ export const mainNav: NavLink[] = [
   { label: "Services", href: "#services" },
   { label: "About", href: "#about" },
   { label: "Process", href: "#process" },
-  { label: "Quote", href: "#quote" },
   { label: "Book Appointment", href: "#appointment" },
 ];
 
