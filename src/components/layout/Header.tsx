@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { mainNav, siteContact } from "@/content/site";
 
 export function Header() {
@@ -24,16 +24,11 @@ export function Header() {
               {link.label}
             </a>
           ))}
+          <span className="text-sm font-medium text-slate-700">MC# 1805901</span>
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <a
-            href={siteContact.phoneHref}
-            className="inline-flex items-center gap-1 text-sm font-medium text-slate-700 transition-colors hover:text-[var(--brand)]"
-          >
-            <Phone className="h-4 w-4" aria-hidden="true" />
-            {siteContact.phoneDisplay}
-          </a>
+          <span className="text-sm font-medium text-slate-700">DoT# 4548146</span>
           <a
             href="#quote"
             className="ring-brand inline-flex items-center justify-center rounded-xl bg-[var(--brand)] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[var(--brand-strong)]"
@@ -68,12 +63,14 @@ export function Header() {
               </li>
             ))}
             <li>
-              <a
-                href={siteContact.phoneHref}
-                className="block rounded-md px-2 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-              >
-                {siteContact.phoneDisplay}
-              </a>
+              <span className="block rounded-md px-2 py-2 text-sm font-medium text-slate-700">
+                MC# 1805901
+              </span>
+            </li>
+            <li>
+              <span className="block rounded-md px-2 py-2 text-sm font-medium text-slate-700">
+                DoT# 4548146
+              </span>
             </li>
           </ul>
         </nav>
