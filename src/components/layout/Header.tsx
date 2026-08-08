@@ -24,11 +24,15 @@ export function Header() {
               {link.label}
             </a>
           ))}
-          <span className="text-sm font-medium text-slate-700">MC# 1805901</span>
+          <span className="rounded-full border border-[var(--brand)]/20 bg-[var(--brand)]/10 px-3 py-1 text-xs font-bold tracking-wide text-[var(--brand-strong)]">
+            MC# 1805901
+          </span>
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <span className="text-sm font-medium text-slate-700">DoT# 4548146</span>
+          <span className="rounded-full border border-[var(--brand)]/20 bg-[var(--brand)]/10 px-3 py-1 text-xs font-bold tracking-wide text-[var(--brand-strong)]">
+            DoT# 4548146
+          </span>
           <a
             href="#quote"
             className="ring-brand inline-flex items-center justify-center rounded-xl bg-[var(--brand)] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[var(--brand-strong)]"
@@ -63,12 +67,12 @@ export function Header() {
               </li>
             ))}
             <li>
-              <span className="block rounded-md px-2 py-2 text-sm font-medium text-slate-700">
+              <span className="inline-flex rounded-full border border-[var(--brand)]/20 bg-[var(--brand)]/10 px-3 py-1.5 text-xs font-bold tracking-wide text-[var(--brand-strong)]">
                 MC# 1805901
               </span>
             </li>
             <li>
-              <span className="block rounded-md px-2 py-2 text-sm font-medium text-slate-700">
+              <span className="inline-flex rounded-full border border-[var(--brand)]/20 bg-[var(--brand)]/10 px-3 py-1.5 text-xs font-bold tracking-wide text-[var(--brand-strong)]">
                 DoT# 4548146
               </span>
             </li>
