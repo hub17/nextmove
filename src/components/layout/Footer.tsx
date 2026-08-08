@@ -25,6 +25,16 @@ export function Footer() {
                 </a>
               </li>
             ))}
+            <li className="pt-1">
+              <span className="inline-flex rounded-full border border-emerald-300/30 bg-emerald-300/10 px-3 py-1 text-xs font-bold tracking-wide text-emerald-200">
+                MC# 1805901
+              </span>
+            </li>
+            <li>
+              <span className="inline-flex rounded-full border border-emerald-300/30 bg-emerald-300/10 px-3 py-1 text-xs font-bold tracking-wide text-emerald-200">
+                DoT# 4548146
+              </span>
+            </li>
           </ul>
         </div>
 
