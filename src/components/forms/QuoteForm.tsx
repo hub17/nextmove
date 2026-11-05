@@ -1,162 +1,215 @@
+
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { quoteSchema, type QuoteFormValues } from "@/lib/validation/quote";
-import { FormField, getAriaDescribedBy } from "./FormField";
+import { useState, type FormEvent } from "react";
 import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
 import { Checkbox } from "@/components/ui/Checkbox";
-import { Button } from "@/components/ui/Button";
 
-type SubmitState = "idle" | "submitting" | "success" | "error";
+function todayLocal() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
 
 export function QuoteForm() {
-  const [submitState, setSubmitState] = useState<SubmitState>("idle");
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<QuoteFormValues>({
-    resolver: zodResolver(quoteSchema),
-    defaultValues: {
-      companyName: "",
-      preferredDeliveryDate: "",
-      specialRequirements: "",
-      message: "",
-      consentToContact: false,
-      honeypot: "",
-    },
-  });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [success, setSuccess] = useState(false);
 
-  async function onSubmit(values: QuoteFormValues) {
-    setSubmitState("submitting");
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setLoading(true);
+    setMessage("");
+    setSuccess(false);
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    const data = {
+      fullName: formData.get("fullName"),
+      companyName: formData.get("companyName"),
+      email: formData.get("email"),
+      phone: formData.get("phone"),
+      cargoType: formData.get("cargoType"),
+      serviceNeeded: formData.get("serviceNeeded"),
+      pickupLocation: formData.get("pickupLocation"),
+      deliveryLocation: formData.get("deliveryLocation"),
+      pickupDate: formData.get("pickupDate"),
+      preferredDeliveryDate: formData.get("preferredDeliveryDate"),
+      estimatedWeight: formData.get("estimatedWeight"),
+      dimensions: formData.get("dimensions"),
+      pieceCount: formData.get("pieceCount"),
+      loadingMethod: formData.get("loadingMethod"),
+      specialRequirements: formData.get("specialRequirements"),
+      message: formData.get("message"),
+      consentToContact: formData.get("consentToContact") === "on",
+      honeypot: formData.get("website"),
+    };
+
     try {
       const response = await fetch("/api/quote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify(data),
       });
-      if (!response.ok) throw new Error("Request failed");
-      setSubmitState("success");
-      reset();
-    } catch {
-      setSubmitState("error");
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Unable to submit your request.");
+      }
+
+      setSuccess(true);
+      setMessage("Your quote request has been submitted successfully. Our team will contact you soon.");
+      form.reset();
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again."
+      );
+    } finally {
+      setLoading(false);
     }
   }
 
-  if (submitState === "success") {
-    return (
-      <p role="status" className="rounded-md bg-green-50 p-4 text-green-800">
-        Thank you. Your quote request was received. This is a request, not a
-        binding price quote — our team will follow up shortly.
-      </p>
-    );
-  }
+  const fieldClass = "space-y-1";
+  const labelClass = "block text-sm font-medium text-slate-700";
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 sm:grid-cols-2">
-      {/* Honeypot field: hidden from real users, bots often fill it. */}
-      <div className="hidden" aria-hidden="true">
-        <label htmlFor="quote-honeypot">Leave this field empty</label>
-        <input
-          id="quote-honeypot"
-          type="text"
-          tabIndex={-1}
-          autoComplete="off"
-          {...register("honeypot")}
-        />
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className={fieldClass}>
+          <label className={labelClass}>Full name *</label>
+          <Input name="fullName" required minLength={2} />
+        </div>
+
+        <div className={fieldClass}>
+          <label className={labelClass}>Company name</label>
+          <Input name="companyName" />
+        </div>
+
+        <div className={fieldClass}>
+          <label className={labelClass}>Email address *</label>
+          <Input name="email" type="email" required />
+        </div>
+
+        <div className={fieldClass}>
+          <label className={labelClass}>Phone number *</label>
+          <Input name="phone" type="tel" required />
+        </div>
+
+        <div className={fieldClass}>
+          <label className={labelClass}>Cargo type *</label>
+          <Select name="cargoType" required defaultValue="">
+            <option value="" disabled>Select cargo type</option>
+            <option value="General goods">General goods</option>
+            <option value="Perishable goods">Perishable goods</option>
+            <option value="Fragile goods">Fragile goods</option>
+            <option value="Industrial equipment">Industrial equipment</option>
+            <option value="Other">Other</option>
+          </Select>
+        </div>
+
+        <div className={fieldClass}>
+          <label className={labelClass}>Service needed *</label>
+          <Select name="serviceNeeded" required defaultValue="">
+            <option value="" disabled>Select a service</option>
+            <option value="Road freight">Road freight</option>
+            <option value="Air freight">Air freight</option>
+            <option value="Sea freight">Sea freight</option>
+            <option value="Warehousing">Warehousing</option>
+            <option value="Customs clearance">Customs clearance</option>
+            <option value="Other">Other</option>
+          </Select>
+        </div>
+
+        <div className={fieldClass}>
+          <label className={labelClass}>Pickup location *</label>
+          <Input name="pickupLocation" required minLength={2} placeholder="City, State" />
+        </div>
+
+        <div className={fieldClass}>
+          <label className={labelClass}>Delivery location *</label>
+          <Input name="deliveryLocation" required minLength={2} placeholder="City, State" />
+        </div>
+
+        <div className={fieldClass}>
+          <label className={labelClass}>Pickup date *</label>
+          <Input name="pickupDate" type="date" required />
+        </div>
+
+        <div className={fieldClass}>
+          <label className={labelClass}>Preferred delivery date</label>
+          <Input name="preferredDeliveryDate" type="date" />
+        </div>
+
+        <div className={fieldClass}>
+          <label className={labelClass}>Estimated weight *</label>
+          <Input name="estimatedWeight" required placeholder="e.g. 500 kg" />
+        </div>
+
+        <div className={fieldClass}>
+          <label className={labelClass}>Dimensions *</label>
+          <Input name="dimensions" required placeholder="e.g. 120 x 80 x 100 cm" />
+        </div>
+
+        <div className={fieldClass}>
+          <label className={labelClass}>Number of pieces *</label>
+          <Input name="pieceCount" required placeholder="e.g. 10" />
+        </div>
+
+        <div className={fieldClass}>
+          <label className={labelClass}>Loading method *</label>
+          <Select name="loadingMethod" required defaultValue="">
+            <option value="" disabled>Select loading method</option>
+            <option value="Manual loading">Manual loading</option>
+            <option value="Forklift">Forklift</option>
+            <option value="Crane">Crane</option>
+            <option value="Other">Other</option>
+          </Select>
+        </div>
       </div>
 
-      <FormField id="quote-fullName" label="Full name" required error={errors.fullName?.message}>
-        <Input id="quote-fullName" invalid={!!errors.fullName} aria-describedby={getAriaDescribedBy("quote-fullName", !!errors.fullName)} {...register("fullName")} />
-      </FormField>
+      <div className={fieldClass}>
+        <label className={labelClass}>Special requirements</label>
+        <Textarea name="specialRequirements" rows={3} />
+      </div>
 
-      <FormField id="quote-companyName" label="Company name" error={errors.companyName?.message}>
-        <Input id="quote-companyName" {...register("companyName")} />
-      </FormField>
+      <div className={fieldClass}>
+        <label className={labelClass}>Additional message</label>
+        <Textarea name="message" rows={4} />
+      </div>
 
-      <FormField id="quote-email" label="Email" required error={errors.email?.message}>
-        <Input id="quote-email" type="email" invalid={!!errors.email} {...register("email")} />
-      </FormField>
-
-      <FormField id="quote-phone" label="Phone" required error={errors.phone?.message}>
-        <Input id="quote-phone" type="tel" invalid={!!errors.phone} {...register("phone")} />
-      </FormField>
-
-      <FormField id="quote-cargoType" label="Cargo type" required error={errors.cargoType?.message}>
-        <Input id="quote-cargoType" invalid={!!errors.cargoType} {...register("cargoType")} />
-      </FormField>
-
-      <FormField id="quote-serviceNeeded" label="Service needed" required error={errors.serviceNeeded?.message}>
-        <Input id="quote-serviceNeeded" invalid={!!errors.serviceNeeded} {...register("serviceNeeded")} />
-      </FormField>
-
-      <FormField id="quote-pickupLocation" label="Pickup city and state" required error={errors.pickupLocation?.message}>
-        <Input id="quote-pickupLocation" invalid={!!errors.pickupLocation} {...register("pickupLocation")} />
-      </FormField>
-
-      <FormField id="quote-deliveryLocation" label="Delivery city and state" required error={errors.deliveryLocation?.message}>
-        <Input id="quote-deliveryLocation" invalid={!!errors.deliveryLocation} {...register("deliveryLocation")} />
-      </FormField>
-
-      <FormField id="quote-pickupDate" label="Pickup date" required error={errors.pickupDate?.message}>
-        <Input id="quote-pickupDate" type="date" invalid={!!errors.pickupDate} {...register("pickupDate")} />
-      </FormField>
-
-      <FormField id="quote-preferredDeliveryDate" label="Preferred delivery date or window" error={errors.preferredDeliveryDate?.message}>
-        <Input id="quote-preferredDeliveryDate" type="date" {...register("preferredDeliveryDate")} />
-      </FormField>
-
-      <FormField id="quote-estimatedWeight" label="Estimated weight" required error={errors.estimatedWeight?.message}>
-        <Input id="quote-estimatedWeight" invalid={!!errors.estimatedWeight} {...register("estimatedWeight")} />
-      </FormField>
-
-      <FormField id="quote-dimensions" label="Dimensions" required error={errors.dimensions?.message}>
-        <Input id="quote-dimensions" invalid={!!errors.dimensions} {...register("dimensions")} />
-      </FormField>
-
-      <FormField id="quote-pieceCount" label="Number of pallets or pieces" required error={errors.pieceCount?.message}>
-        <Input id="quote-pieceCount" invalid={!!errors.pieceCount} {...register("pieceCount")} />
-      </FormField>
-
-      <FormField id="quote-loadingMethod" label="Loading method" required error={errors.loadingMethod?.message}>
-        <Input id="quote-loadingMethod" placeholder="Hand load, dock, ramp, or forklift" invalid={!!errors.loadingMethod} {...register("loadingMethod")} />
-      </FormField>
-
-      <FormField id="quote-specialRequirements" label="Special handling requirements" error={errors.specialRequirements?.message}>
-        <Textarea id="quote-specialRequirements" rows={3} {...register("specialRequirements")} />
-      </FormField>
-
-      <FormField id="quote-message" label="Additional message" error={errors.message?.message}>
-        <Textarea id="quote-message" rows={3} {...register("message")} />
-      </FormField>
-
-      <div className="sm:col-span-2 flex items-start gap-2">
-        <Checkbox id="quote-consentToContact" {...register("consentToContact")} />
-        <label htmlFor="quote-consentToContact" className="text-sm text-slate-700">
-          I consent to be contacted by phone, email, or SMS regarding this request.
+      <div className="hidden" aria-hidden="true">
+        <label>
+          Website
+          <Input name="website" tabIndex={-1} autoComplete="off" />
         </label>
       </div>
-      {errors.consentToContact && (
-        <p role="alert" className="sm:col-span-2 text-sm text-red-600">
-          {errors.consentToContact.message}
+
+      <label className="flex items-start gap-3 text-sm text-slate-600">
+        <Checkbox name="consentToContact" required />
+        <span>I agree to be contacted by WASSI GLOBAL SERVICES regarding this request. *</span>
+      </label>
+
+      {message && (
+        <p role="status" aria-live="polite" className={success ? "text-sm text-green-700" : "text-sm text-red-600"}>
+          {message}
         </p>
       )}
 
-      {submitState === "error" && (
-        <p role="alert" className="sm:col-span-2 text-sm text-red-600">
-          Something went wrong submitting your request. Please try again.
-        </p>
-      )}
-
-      <div className="sm:col-span-2">
-        <Button type="submit" disabled={submitState === "submitting"}>
-          {submitState === "submitting" ? "Submitting…" : "Request a Quote"}
-        </Button>
-      </div>
+      <button
+        type="submit"
+        disabled={loading}
+        className="rounded-lg bg-blue-700 px-6 py-3 font-semibold text-white transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {loading ? "Submitting..." : "Request a Quote"}
+      </button>
     </form>
   );
 }
